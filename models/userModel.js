@@ -55,11 +55,11 @@ const userSchema=new Schema({
 })
 function validRegister(obj){
     const schema=Joi.object({
-        firstName:joi.string().min(3).max(20).required(),
-        lastName: joi.string().min(3).max(20).required(),
-        age: joi.number().required(),
-        email:joi.string().email().required(),
-        password: joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')),
+        firstName:Joi.string().min(3).max(20).required(),
+        lastName: Joi.string().min(3).max(20).required(),
+        age: Joi.number().required(),
+        email:Joi.string().email().required(),
+        password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')),
         rePassword:Joi.ref('password')
 
     })
