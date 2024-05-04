@@ -1,58 +1,66 @@
 const {model,Schema, default: mongoose}=require('mongoose')
 const Joi=require('joi')
 const userSchema=new Schema({
-name:{
-    type:String,
-    required:true,
-    minLength:3,
-    maxLength:15,
-    trim:true
-},
-email:{
-    type:String,
-    required:true,
-   unique:true,
-    trim:true
-},
-password:{
-    type:String,
-    required:true,
-    minLength:6,
-    maxLength:100,
-    trim:true
-},
-phone:{
-    type:String,
-    required:true
-},
-answer:{
-    type:String,
-    required:true
-},
-role:{
-    type:String,
-    default:"user"
-},
-address:{
-    type:String,
-    default:""
-},
-cart: [{
-    product: { type: mongoose.Schema.Types.ObjectId, ref: 'product' },
+    firstName: {
+        type: String,
+        required: [true, 'firstName is required'],
+        minLength: [3, 'too short firstName'],
+        maxLength: [20, 'too long firstName'],
+    },
+    lastName: {
+        type: String,
+        required: true,    },
+    email: {
+        type: String,
+        required: [true, 'email is required'],
+        unique: [true, 'email must be unique']
+    },
+    password: {
+        type: String,
+        required: [true, 'password is required'],
+    },
+    age: {
+        type: Number,
+        required: true,
+    },
+    phone: {
+        type: String,
+    },
+    active: {
+        type: Boolean,
+        default: false
+    },
+    role: {
+        type: String,
+        default: "User",
+        emum: ["User", "Admin"]
+    },
+    image: {
+        type: String
+    },
+    confirmEmail: {
+        type: String,
+        default: false,
+    },
+    blocked: {
+        type: Boolean,
+        default: false
+    },
+    wishList: [{
+        type: Schema.Types.ObjectId,
+        ref: "Product"
     }]
-},{
-    timestamps:true
+}, {
+    timestamps: true
 })
 function validRegister(obj){
     const schema=Joi.object({
-        name:Joi.string().required().min(3).max(20),
-        email:Joi.string().email(),
-        password:Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
-        rePassword:Joi.ref('password'),
-        phone:Joi.string(),
-        answer:Joi.string().required().min(3).max(20),
-        address:Joi.string().required().min(3).max(50),
+        firstName:joi.string().min(3).max(20).required(),
+        lastName: joi.string().min(3).max(20).required(),
+        age: joi.number().required(),
+        email:joi.string().email().required(),
+        password: joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')),
+        rePassword:Joi.ref('password')
 
     })
     return schema.validate(obj)
