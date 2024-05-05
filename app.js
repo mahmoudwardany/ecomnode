@@ -3,6 +3,8 @@ const cors=require('cors')
 const connectDB = require('./DB/config')
 const morgan = require('morgan')
 const compression =require("compression")
+const { notFound, handleError } = require('./middleware/error')
+
 require('dotenv').config()
 
 //db connect
@@ -24,7 +26,8 @@ app.use(`/api/v1/category`,require('./router/categoryRoute'))
 app.use(`/api/v1/product`,require('./router/productRoute'))
 app.use(`/api/v1/user`,require('./router/user'))
 
-
+app.use(notFound)
+app.use(handleError)
 
 
 app.listen(port,()=>{

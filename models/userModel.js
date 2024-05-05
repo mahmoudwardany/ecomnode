@@ -54,15 +54,30 @@ const userSchema=new Schema({
     timestamps: true
 })
 function validRegister(obj){
-    const schema=Joi.object({
-        firstName:Joi.string().min(3).max(20).required(),
-        lastName: Joi.string().min(3).max(20).required(),
-        age: Joi.number().required(),
-        email:Joi.string().email().required(),
-        password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')),
-        rePassword:Joi.ref('password')
-
-    })
+    const schema = Joi.object({
+        firstName: Joi.string().min(3).max(20).required().messages({
+            'string.min': 'First name must be at least {#limit} characters long',
+            'string.max': 'First name cannot be longer than {#limit} characters',
+            'any.required': 'First name is required'
+        }),
+        lastName: Joi.string().min(3).max(20).required().messages({
+            'string.min': 'Last name must be at least {#limit} characters long',
+            'string.max': 'Last name cannot be longer than {#limit} characters',
+            'any.required': 'Last name is required'
+        }),
+        age: Joi.number().required().messages({
+            'any.required': 'Age is required',
+            'number.base': 'Age must be a number'
+        }),
+        email: Joi.string().email().required().messages({
+            'string.email': 'Email must be a valid email address',
+            'any.required': 'Email is required'
+        }),
+        password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')).message("Password must contain alphabets and numbers").required().messages({
+            'string.pattern.base': 'Password must be between 6 and 30 characters and contain only alphabets and numbers',
+            'any.required': 'Password is required'
+        }),
+    });
     return schema.validate(obj)
     
     }
